@@ -120,27 +120,24 @@ When suggesting features:
    git checkout -b feature/your-feature-name
    ```
 
-2. **Make Changes**
+2. **Make Your Changes**
 
    - Write clean, documented code
    - Add tests if applicable
-   - Update documentation
+   - Update documentation as needed
+   - Ensure code passes linting and type checking
 
-3. **Add Changeset**
+3. **Test Thoroughly**
 
    ```bash
-   npm run changeset -- add
+   npm run lint
+   npm run build
    ```
-
-   - Select the type of change (major/minor/patch)
-   - Write a meaningful description
-
-4. **Test Thoroughly**
 
    - Test all affected functionality
    - Ensure no regressions
 
-5. **Submit PR**
+4. **Submit PR**
    - Clear title and description
    - Link to related issues
    - Include screenshots for UI changes
@@ -149,28 +146,86 @@ When suggesting features:
 
 - [ ] Code follows project style guidelines
 - [ ] Self-review completed
-- [ ] Changeset added for the changes
+- [ ] Build passes: `npm run build`
+- [ ] Lint passes: `npm run lint`
 - [ ] Documentation updated
 - [ ] No breaking changes (or clearly documented)
 - [ ] All CI checks pass
 
 ## 🏷️ Release Process
 
-Releases are handled automatically via changesets:
+We use [Changesets](https://github.com/changesets/changesets) to manage versioning and releases.
 
-1. **Create Feature Branch & Make Changes**
-   - Follow the PR process above
+### 1. Create a Changeset
 
-2. **Changesets Creates Version PR**
-   - Changesets action automatically creates a PR with version bump
-   - Includes updated CHANGELOG.md
+When you make changes that should be released, create a changeset:
 
-3. **Merge Version PR**
-   - Review and merge the version bump PR
+```bash
+npm run changeset -- add
+```
 
-4. **Automatic npm Publish**
-   - GitHub Actions workflow publishes to npm with OIDC
+This will prompt you to:
+
+- Choose the type of change:
+  - **patch**: Bug fixes, small improvements
+  - **minor**: New features, backwards compatible changes
+  - **major**: Breaking changes
+- Write a summary of the changes
+
+### 2. Commit and Push
+
+```bash
+git add .
+git commit -m "feat: your feature description"
+git push origin feature/your-feature-name
+```
+
+### 3. Create Pull Request
+
+Create a PR to merge your changes into `main`. The changeset file will be included in your PR.
+
+### 4. Automated Release
+
+Once your PR is merged to `main`:
+
+1. **Version PR Created**: Changesets action creates a PR with:
+   - Updated version numbers in `package.json`
+   - Generated `CHANGELOG.md` entries
+   - Consumed changeset files
+
+2. **Publish Release**: When the version PR is merged:
+   - Package is built: `npm run build`
+   - Published to npm with OIDC/trusted publishers
    - GitHub Release created automatically
+
+### Release Types
+
+- **Patch (1.0.0 → 1.0.1)**: Bug fixes, documentation updates
+- **Minor (1.0.0 → 1.1.0)**: New features, improvements
+- **Major (1.0.0 → 2.0.0)**: Breaking changes
+
+### Manual Release (Emergency Only)
+
+If you need to publish manually without the workflow:
+
+```bash
+# Update versions and generate changelog
+npm run changeset:version
+
+# Build
+npm run build
+
+# Publish to npm
+npm run changeset:publish
+```
+
+### Best Practices
+
+1. **Always create changesets** for user-facing changes
+2. **Write clear changeset summaries** - they become changelog entries
+3. **Test thoroughly** before creating PRs
+4. **Follow semantic versioning** when choosing change types
+5. **Keep PRs focused** - one feature/fix per PR
 
 ## 📞 Getting Help
 
