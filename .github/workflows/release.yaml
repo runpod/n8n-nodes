@@ -10,7 +10,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
   contents: write
   pull-requests: write
-  id-token: write # Required for OIDC/trusted publishers
+  id-token: write # Required for OIDC
 
 jobs:
   release:
@@ -41,8 +41,8 @@ jobs:
         with:
           publish: npm changeset:publish
           version: npm changeset:version
-          commit: 'chore: version packages'
-          title: 'chore: version packages'
+          commit: "chore: version packages"
+          title: "chore: version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_ACCESS: public # For scoped public packages

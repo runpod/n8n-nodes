@@ -1,7 +1,7 @@
-# n8n Community Node: Runpod Public Endpoints
+# n8n Community Nodes: Runpod
 
-[![npm version](https://badge.fury.io/js/n8n-nodes-runpod-public-endpoints.svg)](https://badge.fury.io/js/n8n-nodes-runpod-public-endpoints)
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![npm version](https://badge.fury.io/js/%40runpod%2Fn8n-nodes.svg)](https://badge.fury.io/js/%40runpod%2Fn8n-nodes)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A powerful n8n Community Node that provides seamless integration with Runpod's Public Endpoints API. Generate text, images, videos, and audio using cutting-edge AI models with dynamic model discovery and smart categorization.
 
@@ -20,22 +20,22 @@ A powerful n8n Community Node that provides seamless integration with Runpod's P
 ### Method 1: npm (Recommended)
 
 ```bash
-npm install n8n-nodes-runpod-public-endpoints
+npm install @runpod/n8n-nodes
 ```
 
 ### Method 2: n8n Community Nodes
 
 1. Go to **Settings** → **Community Nodes** in your n8n instance
 2. Click **Install a community node**
-3. Search for `n8n-nodes-runpod-public-endpoints`
+3. Search for `@runpod/n8n-nodes`
 4. Click **Install**
 
 ### Method 3: Manual Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/runpod/n8n-nodes-runpod-public-endpoints.git
-cd n8n-nodes-runpod-public-endpoints
+git clone https://github.com/runpod/n8n-nodes.git
+cd n8n-nodes
 
 # Install dependencies
 npm install
@@ -178,8 +178,8 @@ For long-running tasks (video generation, complex images), use async mode:
 
 ```bash
 # Clone repository
-git clone https://github.com/runpod/n8n-nodes-runpod-public-endpoints.git
-cd n8n-nodes-runpod-public-endpoints
+git clone https://github.com/runpod/n8n-nodes.git
+cd n8n-nodes
 
 # Install dependencies
 npm install
@@ -224,7 +224,7 @@ npm run build
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guide](.github/CONTRIBUTING.md) for details.
 
 ### Development Workflow
 
@@ -242,8 +242,8 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 
 - **Runpod Documentation**: https://docs.runpod.io/hub/public-endpoint-reference
 - **n8n Community Nodes**: https://docs.n8n.io/integrations/community-nodes/
-- **GitHub Repository**: https://github.com/runpod/n8n-nodes-runpod-public-endpoints
-- **npm Package**: https://www.npmjs.com/package/n8n-nodes-runpod-public-endpoints
+- **GitHub Repository**: https://github.com/runpod/n8n-nodes
+- **npm Package**: https://www.npmjs.com/package/@runpod/n8n-nodes
 
 ## 🚨 Troubleshooting
 
@@ -279,8 +279,8 @@ N8N_LOG_LEVEL=debug n8n start
 
 ## 🆘 Support
 
-- **Issues**: [GitHub Issues](https://github.com/runpod/n8n-nodes-runpod-public-endpoints/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/runpod/n8n-nodes-runpod-public-endpoints/discussions)
+- **Issues**: [GitHub Issues](https://github.com/runpod/n8n-nodes/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/runpod/n8n-nodes/discussions)
 - **Runpod Support**: https://runpod.io/support
 
 ## 🙏 Acknowledgments
