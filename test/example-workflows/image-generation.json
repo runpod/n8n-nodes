@@ -1,0 +1,86 @@
+{
+  "name": "Runpod Image Generation Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "generateImage",
+        "modelId": "black-forest-labs-flux-1-dev",
+        "inputJson": "{\n  \"prompt\": \"A futuristic cityscape at sunset with flying cars and neon lights, cyberpunk style, highly detailed\",\n  \"negative_prompt\": \"blurry, low quality, distorted\",\n  \"width\": 1024,\n  \"height\": 1024,\n  \"num_inference_steps\": 25,\n  \"guidance\": 7.5,\n  \"seed\": 12345,\n  \"image_format\": \"png\"\n}",
+        "wait": true,
+        "download": true
+      },
+      "id": "runpod-image-gen",
+      "name": "Generate Image with Flux",
+      "type": "n8n-nodes-runpod-public-endpoints.runpodPublicEndpoints",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": {
+        "runpodApi": {
+          "id": "runpod-api-cred",
+          "name": "Runpod API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "image_url",
+              "value": "={{ $json.output.image_url }}"
+            },
+            {
+              "name": "model_used",
+              "value": "={{ $json.modelId }}"
+            },
+            {
+              "name": "generation_time",
+              "value": "={{ $json.executionTime }}ms"
+            },
+            {
+              "name": "prompt",
+              "value": "A futuristic cityscape at sunset with flying cars and neon lights, cyberpunk style, highly detailed"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-image-output",
+      "name": "Format Image Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [460, 300]
+    }
+  ],
+  "connections": {
+    "Generate Image with Flux": {
+      "main": [
+        [
+          {
+            "node": "Format Image Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "runpod-image-example"
+  },
+  "id": "runpod-image-workflow",
+  "tags": [
+    {
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z",
+      "id": "runpod-examples",
+      "name": "Runpod Examples"
+    }
+  ]
+}

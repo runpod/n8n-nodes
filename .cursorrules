@@ -1,0 +1,152 @@
+---
+name: Runpod n8n Node Rules
+on: ["edit", "generate", "modify"]
+scope:
+  - path: "src/**"
+  - path: "package.json"
+  - path: "README.md"
+intent: "Help build and maintain an n8n Community Node that calls Runpod Public Endpoints via /run, /runsync, and /status. Enforce n8n code standards, safe auth handling, strong types, and good UX copy."
+---
+
+# Project guidance
+
+- **Target**: An n8n Community Node named `Runpod Public Endpoints` that lets users call Runpod models by ID (e.g. `black-forest-labs-flux-1-dev`) with either **synchronous** (`/runsync`) or **asynchronous** (`/run` + `/status`) execution.
+- **Authentication**: API key in header `Authorization: Bearer <key>`.
+- **Base URL**: `https://api.runpod.ai/v2/{modelId}`.
+- **Operations**:
+  - `Generate (sync)`: `POST /runsync` → returns `output`, `status`, `id`.
+  - `Generate (async)`: `POST /run` → returns job `id`.
+  - `Get Status` (async): `GET /status/{jobId}` → returns status and, when complete, `output`.
+- **Input schema**: The request body must be `{ input: {...model specific fields...} }`. For text models use fields like `prompt`, for image models include `width`, `height`, `num_inference_steps`, `guidance`, etc. Keep it open/JSON so advanced users can pass any supported parameters.
+
+# n8n style & safety
+
+- Prefer **TypeScript**, export `version`, `description`, `defaults`, `properties` in the description file, and implement `execute()` in the node file.
+- Use `IHttpRequestOptions` from `n8n-workflow` only through n8n helpers; prefer a tiny **RunpodClient** wrapper for clarity.
+- **Credentials**: Define `RunpodApi` credentials type with a single `apiKey: string` field stored securely by n8n.
+- **Binary data**: When the response contains `image_url`, fetch it and return as binary when the user sets `download: true`. Name the binary property `data`.
+- **Errors**: Throw `NodeOperationError` with helpful messages and include Runpod `status` / `id` when present.
+- **Pagination/async**: For async flow, if `waitForCompletion` is enabled, poll `/status/{jobId}` with exponential backoff and a max timeout. Otherwise, return `id` so users can chain a separate `Get Status` operation.
+- **UX copy**: Use human-friendly display names (e.g., *Model ID*, *Input JSON*, *Download output as binary*). Include quick descriptions and examples.
+- **Testing**: Include a `test/example-workflow.json` referencing environment variable `RUNPOD_API_KEY` as credentials placeholder.
+
+# Code patterns
+
+- Strong types for response:
+  ```ts
+  type RunpodSyncResponse<T=unknown> = {
+    delayTime?: number;
+    executionTime?: number;
+    id: string;
+    output?: T;
+    status: 'QUEUED' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED' | string;
+    workerId?: string;
+  };
+  ```
+
+- Wrap fetch with retry on 429/5xx. Respect n8n proxy settings and timeout.
+
+- Don't hardcode model parameters; instead accept user-provided JSON and validate it.
+
+- Generate output items as:
+  - JSON: { id, status, output, executionTime, image_url } (flatten output best-effort)
+  - Binary (optional): download the first image_url or audio_url if present.
+
+# File structure expectations
+
+```
+n8n-nodes-runpod-public-endpoints/
+├─ .cursor/
+│  └─ rules/
+│     └─ runpod-n8n.mdc
+├─ .cursorrules
+├─ .editorconfig
+├─ .eslintignore
+├─ .eslintrc.cjs
+├─ .gitignore
+├─ LICENSE
+├─ README.md
+├─ package.json
+├─ tsconfig.json
+├─ src/
+│  ├─ credentials/
+│  │  └─ RunpodApi.credentials.ts
+│  ├─ helpers/
+│  │  └─ RunpodClient.ts
+│  └─ nodes/
+│     └─ RunpodPublicEndpoints/
+│        ├─ RunpodPublicEndpoints.node.ts
+│        ├─ RunpodPublicEndpoints.description.ts
+│        └─ RunpodPublicEndpoints.operations.ts
+└─ test/
+   └─ example-workflow.json
+```
+
+# Implementation guidelines
+
+## Node Description (`src/nodes/RunpodPublicEndpoints/RunpodPublicEndpoints.description.ts`)
+- Export `version`, `description`, `defaults`, `properties`
+- Define clear operation names: "Generate (Sync)", "Generate (Async)", "Get Status"
+- Use descriptive field names with helpful descriptions
+- Include examples in field descriptions
+- Set appropriate defaults (e.g., `waitForCompletion: true` for async operations)
+
+## Credentials (`src/credentials/RunpodApi.credentials.ts`)
+- Define `RunpodApi` interface with `apiKey: string`
+- Use n8n's secure credential storage
+- Include validation for API key format
+
+## Client (`src/helpers/RunpodClient.ts`)
+- Implement retry logic for 429/5xx errors
+- Handle exponential backoff for polling
+- Respect n8n proxy settings
+- Support both sync and async operations
+- Proper error handling with Runpod status codes
+
+## Main Node (`src/nodes/RunpodPublicEndpoints/RunpodPublicEndpoints.node.ts`)
+- Implement `execute()` method
+- Handle binary data downloads when `download: true`
+- Flatten output objects for better UX
+- Support both sync and async workflows
+- Proper error messages with Runpod context
+
+## Operations (`src/nodes/RunpodPublicEndpoints/RunpodPublicEndpoints.operations.ts`)
+- Define operation constants and types
+- Export operation names for use in description and node files
+- Include operation-specific type definitions
+
+# Error handling patterns
+
+```ts
+// Good error handling
+if (response.status === 'FAILED') {
+  throw new NodeOperationError(this.getNode(), 
+    `Runpod job failed: ${response.id}`, 
+    { status: response.status, id: response.id }
+  );
+}
+
+// Include helpful context
+throw new NodeOperationError(this.getNode(), 
+  `API request failed: ${error.message}`, 
+  { statusCode: response.status, modelId }
+);
+```
+
+# Testing requirements
+
+- Include `test/example-workflow.json` with:
+  - Environment variable `RUNPOD_API_KEY` for credentials
+  - Example operations for all three endpoints
+  - Sample model IDs and input parameters
+  - Both sync and async workflow examples
+
+# Documentation standards
+
+- README.md should include:
+  - Installation instructions
+  - Authentication setup
+  - Usage examples
+  - Supported model IDs
+  - Input parameter examples
+  - Error handling guide

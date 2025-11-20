@@ -1,0 +1,76 @@
+{
+  "name": "@runpod/n8n-nodes",
+  "version": "1.0.0",
+  "description": "n8n Community Nodes for Runpod integration",
+  "author": "RunPod Team <community@runpod.io>",
+  "license": "MIT",
+  "keywords": [
+    "n8n-community-node-package",
+    "runpod",
+    "ai",
+    "text-generation",
+    "image-generation",
+    "video-generation",
+    "audio-processing",
+    "workflow-automation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/runpod/n8n-nodes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/runpod/n8n-nodes/issues"
+  },
+  "homepage": "https://github.com/runpod/n8n-nodes#readme",
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "./dist/credentials/RunpodPublicEndpoints.credentials.js"
+    ],
+    "nodes": [
+      "./dist/nodes/RunpodPublicEndpoints.node.js"
+    ]
+  },
+  "main": "dist/nodes/RunpodPublicEndpoints.node.js",
+  "types": "dist/nodes/RunpodPublicEndpoints.node.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "test/example-workflows"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && cp src/nodes/RunpodPublicEndpoints/runpod-cube.svg dist/nodes/",
+    "lint": "eslint .",
+    "dev": "n8n dev",
+    "prepare": "npm run build",
+    "test": "echo \"No tests specified\" && exit 0",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish"
+  },
+  "peerDependencies": {
+    "n8n-workflow": ">=1.0.0",
+    "n8n-core": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.0",
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/runpod"
+  }
+}

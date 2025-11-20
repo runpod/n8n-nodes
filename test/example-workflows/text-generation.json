@@ -1,0 +1,82 @@
+{
+  "name": "Runpod Text Generation Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "generateText",
+        "modelId": "granite-4-0-h-small",
+        "inputJson": "{\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a helpful assistant that explains complex topics in simple terms.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Explain quantum computing in 3 sentences.\"\n    }\n  ],\n  \"sampling_params\": {\n    \"max_tokens\": 300,\n    \"temperature\": 0.7,\n    \"seed\": 42\n  }\n}",
+        "wait": true,
+        "download": false
+      },
+      "id": "runpod-text-gen",
+      "name": "Generate Text with Granite",
+      "type": "n8n-nodes-runpod-public-endpoints.runpodPublicEndpoints",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": {
+        "runpodApi": {
+          "id": "runpod-api-cred",
+          "name": "Runpod API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "explanation",
+              "value": "={{ $json.output }}"
+            },
+            {
+              "name": "model_used",
+              "value": "={{ $json.modelId }}"
+            },
+            {
+              "name": "execution_time",
+              "value": "={{ $json.executionTime }}ms"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-output",
+      "name": "Format Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [460, 300]
+    }
+  ],
+  "connections": {
+    "Generate Text with Granite": {
+      "main": [
+        [
+          {
+            "node": "Format Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "runpod-text-example"
+  },
+  "id": "runpod-text-workflow",
+  "tags": [
+    {
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z",
+      "id": "runpod-examples",
+      "name": "Runpod Examples"
+    }
+  ]
+}

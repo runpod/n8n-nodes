@@ -1,0 +1,211 @@
+{
+  "name": "Runpod Async Video Generation Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "generateVideo",
+        "modelId": "wan-2-5",
+        "inputJson": "{\n  \"prompt\": \"A serene morning in an ancient forest, golden sunlight filtering through tall pine trees, birds chirping, peaceful atmosphere\",\n  \"num_inference_steps\": 30,\n  \"guidance\": 5,\n  \"negative_prompt\": \"dark, scary, violent\",\n  \"size\": \"1280*720\",\n  \"duration\": 5,\n  \"flow_shift\": 5,\n  \"seed\": 98765,\n  \"enable_prompt_optimization\": true,\n  \"enable_safety_checker\": true\n}",
+        "wait": false,
+        "download": false
+      },
+      "id": "runpod-video-start",
+      "name": "Start Video Generation",
+      "type": "n8n-nodes-runpod-public-endpoints.runpodPublicEndpoints",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": {
+        "runpodApi": {
+          "id": "runpod-api-cred",
+          "name": "Runpod API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "wait-30s",
+      "name": "Wait 30 seconds",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "operation": "status",
+        "modelId": "wan-2-5",
+        "jobId": "={{ $json.id }}",
+        "download": true
+      },
+      "id": "check-status",
+      "name": "Check Video Status",
+      "type": "n8n-nodes-runpod-public-endpoints.runpodPublicEndpoints",
+      "typeVersion": 1,
+      "position": [680, 300],
+      "credentials": {
+        "runpodApi": {
+          "id": "runpod-api-cred",
+          "name": "Runpod API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "status-check",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "COMPLETED",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-if-completed",
+      "name": "Check if Completed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "seconds"
+      },
+      "id": "wait-10s",
+      "name": "Wait 10 seconds",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.2,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "video_url",
+              "value": "={{ $json.output.video_url }}"
+            },
+            {
+              "name": "job_id",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "name": "status",
+              "value": "={{ $json.status }}"
+            },
+            {
+              "name": "execution_time",
+              "value": "={{ $json.executionTime }}ms"
+            },
+            {
+              "name": "prompt",
+              "value": "A serene morning in an ancient forest, golden sunlight filtering through tall pine trees, birds chirping, peaceful atmosphere"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-video-output",
+      "name": "Format Video Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1120, 400]
+    }
+  ],
+  "connections": {
+    "Start Video Generation": {
+      "main": [
+        [
+          {
+            "node": "Wait 30 seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 30 seconds": {
+      "main": [
+        [
+          {
+            "node": "Check Video Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Video Status": {
+      "main": [
+        [
+          {
+            "node": "Check if Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Completed": {
+      "main": [
+        [
+          {
+            "node": "Format Video Output",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 10 seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 10 seconds": {
+      "main": [
+        [
+          {
+            "node": "Check Video Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "runpod-video-example"
+  },
+  "id": "runpod-video-workflow",
+  "tags": [
+    {
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z",
+      "id": "runpod-examples",
+      "name": "Runpod Examples"
+    }
+  ]
+}

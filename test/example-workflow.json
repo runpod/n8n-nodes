@@ -1,0 +1,135 @@
+{
+  "name": "Runpod Granite 4 H Small Example",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "runSync",
+        "modelId": "granite-4-0-h-small",
+        "inputJson": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a helpful assistant. Please ensure responses are professional, accurate, and safe."
+            },
+            {
+              "role": "user",
+              "content": "What is Runpod?"
+            }
+          ],
+          "sampling_params": {
+            "max_tokens": 512,
+            "temperature": 0.7,
+            "seed": -1,
+            "top_k": -1,
+            "top_p": 1
+          }
+        },
+        "download": false
+      },
+      "id": "runpod-sync",
+      "name": "Runpod Sync",
+      "type": "n8n-nodes-runpod-public-endpoints.runpodPublicEndpoints",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": {
+        "runpodApi": {
+          "id": "runpod-api-key",
+          "name": "Runpod API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "run",
+        "modelId": "granite-4-0-h-small",
+        "inputJson": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a helpful assistant. Please ensure responses are professional, accurate, and safe."
+            },
+            {
+              "role": "user",
+              "content": "Explain the benefits of using Runpod for AI model deployment."
+            }
+          ],
+          "sampling_params": {
+            "max_tokens": 1024,
+            "temperature": 0.5,
+            "seed": 42,
+            "top_k": 50,
+            "top_p": 0.9
+          }
+        },
+        "wait": true,
+        "pollMs": 2000,
+        "timeoutSeconds": 120,
+        "download": false
+      },
+      "id": "runpod-async",
+      "name": "Runpod Async",
+      "type": "n8n-nodes-runpod-public-endpoints.runpodPublicEndpoints",
+      "typeVersion": 1,
+      "position": [480, 300],
+      "credentials": {
+        "runpodApi": {
+          "id": "runpod-api-key",
+          "name": "Runpod API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "status",
+        "modelId": "granite-4-0-h-small",
+        "jobId": "={{ $json.id }}",
+        "download": false
+      },
+      "id": "runpod-status",
+      "name": "Check Status",
+      "type": "n8n-nodes-runpod-public-endpoints.runpodPublicEndpoints",
+      "typeVersion": 1,
+      "position": [720, 300],
+      "credentials": {
+        "runpodApi": {
+          "id": "runpod-api-key",
+          "name": "Runpod API Key"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "runpod-sync": {
+      "main": [
+        [
+          {
+            "node": "runpod-async",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "runpod-async": {
+      "main": [
+        [
+          {
+            "node": "runpod-status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}
+

@@ -1,0 +1,35 @@
+{
+  "name": "Runpod Audio Generation",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "generateAudio",
+        "modelId": "whisper-v3-large",
+        "inputJson": "{\n  \"audio\": \"https://example.com/audio.mp3\",\n  \"language\": \"en\",\n  \"response_format\": \"json\"\n}",
+        "wait": true,
+        "download": false
+      },
+      "id": "runpod-audio",
+      "name": "Runpod Audio",
+      "type": "n8n-nodes-runpod-public-endpoints.runpodPublicEndpoints",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": {
+        "runpodApi": {
+          "id": "runpod-credential",
+          "name": "Runpod API Key"
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}
