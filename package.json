@@ -1,8 +1,8 @@
 {
   "name": "@runpod/n8n-nodes",
   "version": "1.0.0",
-  "description": "n8n Community Nodes for Runpod integration",
-  "author": "RunPod Team <community@runpod.io>",
+  "description": "n8n Community Node: Runpod Public Endpoints",
+  "author": "Zach Gulsby <zach.gulsby@runpod.io>",
   "license": "MIT",
   "keywords": [
     "n8n-community-node-package",
