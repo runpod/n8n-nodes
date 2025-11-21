@@ -120,7 +120,7 @@ n8n-nodes-runpod-public-endpoints/
 ### Core Technologies
 
 - **Language**: TypeScript 5.4+
-- **Runtime**: Node.js 18+
+- **Runtime**: Node.js ^20.17.0 or >=22.9.0
 - **Framework**: n8n Community Node API (v1)
 - **API**: Runpod Public Endpoints REST API + GraphQL for model discovery
 
@@ -387,18 +387,15 @@ n8n dev
 
 ### Version Management
 
-- **Current**: v1.0.14
 - **Format**: Semantic Versioning (MAJOR.MINOR.PATCH)
-- **File**: `package.json` (version field)
+- **Source of Truth**: `package.json` (version field)
 
 ### Publishing Process
 
-1. Update `package.json` version
-2. Update `CHANGELOG.md` with changes
-3. Commit to git
-4. Tag release: `git tag v1.0.14`
-5. Run: `npm publish` (publishes to npm registry)
-6. Create GitHub release with notes
+1. Create changeset: `npm run changeset`
+2. Commit to git
+3. GitHub Actions auto-versioning and publishes to npm registry
+4. Create GitHub release with notes
 
 ### Distribution Channels
 
