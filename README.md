@@ -5,6 +5,10 @@
 
 A powerful n8n Community Node that provides seamless integration with Runpod's Public Endpoints API. Generate text, images, videos, and audio using cutting-edge AI models with dynamic model discovery and smart categorization.
 
+<!-- runpod-agent-setup:start -->
+**For AI agents:** setup instructions for the Runpod skills and MCP server are at https://agents.runpod.io/
+<!-- runpod-agent-setup:end -->
+
 ## 🚀 Features
 
 - **🔄 Dynamic Model Discovery** - Automatically fetches all available Runpod models via GraphQL API
